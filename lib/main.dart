@@ -33,7 +33,7 @@ Future<void> _configureAmplify() async {
         modelProvider: ModelProvider.instance,
       ),
     ),
-    AmplifyStorageS3(),
+      AmplifyStorageS3(),
   ]);
   await Amplify.configure(amplifyConfig);
 }
