@@ -1,5 +1,7 @@
 import 'package:amplify_trips_planner/common/navigation/router/routes.dart';
 import 'package:amplify_trips_planner/features/trip/ui/edit_trip_page/edit_trip_page.dart';
+import 'package:amplify_trips_planner/features/trip/ui/past_trip_page/past_trip_page.dart';
+import 'package:amplify_trips_planner/features/trip/ui/past_trips/past_trips_list.dart';
 import 'package:amplify_trips_planner/features/trip/ui/trip_page/trip_page.dart';
 import 'package:amplify_trips_planner/features/trip/ui/trips_list/trips_list_page.dart';
 import 'package:amplify_trips_planner/models/ModelProvider.dart';
@@ -29,7 +31,20 @@ final router = GoRouter(
           trip: state.extra! as Trip,
         );
       },
-    ),    
+    ),
+        GoRoute(
+      path: '/pasttrips',
+      name: AppRoute.pastTrips.name,
+      builder: (context, state) => const PastTripsList(),
+    ),
+    GoRoute(
+      path: '/pasttrip/:id',
+      name: AppRoute.pastTrip.name,
+      builder: (context, state) {
+        final tripId = state.pathParameters['id']!;
+        return PastTripPage(tripId: tripId);
+      },
+    ),  
   ],
   errorBuilder: (context, state) => Scaffold(
     body: Center(

@@ -6,10 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class TripsListGridView extends StatelessWidget {
   const TripsListGridView({
     required this.tripsList,
+    required this.isPast,
     super.key,
   });
 
   final AsyncValue<List<Trip>> tripsList;
+  final bool isPast;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class TripsListGridView extends StatelessWidget {
                     children: value.map((tripData) {
                       return TripGridViewItem(
                         trip: tripData,
+                        isPast: isPast,
                       );
                     }).toList(growable: false),
                   );

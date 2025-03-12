@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 const Map<int, Color> primarySwatch = {
   50: Color.fromRGBO(255, 207, 68, .1),
   100: Color.fromRGBO(255, 207, 68, .2),
@@ -14,3 +13,25 @@ const Map<int, Color> primarySwatch = {
 };
 const MaterialColor primaryColor = MaterialColor(0xFFFFCF44, primarySwatch);
 const int primaryColorDark = 0xFFFD9725;
+const List<double> greyoutMatrix = [
+  0.2126,
+  0.7152,
+  0.0722,
+  0,
+  0,
+  0.2126,
+  0.7152,
+  0.0722,
+  0,
+  0,
+  0.2126,
+  0.7152,
+  0.0722,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1,
+  0,
+];
