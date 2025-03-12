@@ -17,9 +17,9 @@ class StorageService {
   });
 
   ValueNotifier<double> uploadProgress = ValueNotifier<double>(0);
-  Future<String> getImageUrl(String key) async {
+  Future<String> getImageUrl(String path) async {
     final result = await Amplify.Storage.getUrl(
-      key: key,
+      path: StoragePath.fromString(path),
       options: const StorageGetUrlOptions(
         pluginOptions: S3GetUrlPluginOptions(
           validateObjectExistence: true,
@@ -37,18 +37,18 @@ class StorageService {
   Future<String?> uploadFile(File file) async {
     try {
       final extension = p.extension(file.path);
-      final key = const Uuid().v1() + extension;
+      final path = const Uuid().v1() + extension;
       final awsFile = AWSFile.fromPath(file.path);
 
       await Amplify.Storage.uploadFile(
         localFile: awsFile,
-        key: key,
+        path: StoragePath.fromString(path),
         onProgress: (progress) {
           uploadProgress.value = progress.fractionCompleted;
         },
       ).result;
 
-      return key;
+      return path;
     } on Exception catch (e) {
       debugPrint(e.toString());
       return null;
