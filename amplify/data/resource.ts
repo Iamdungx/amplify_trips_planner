@@ -1,59 +1,58 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
-import { Activity } from 'aws-cdk-lib/aws-stepfunctions';
 
-/*== STEP 1 ===============================================================
-The section below creates a Todo database table with a "content" field. Try
-adding a new "isDone" field as a boolean. The authorization rule below
-specifies that any unauthenticated user can "create", "read", "update", 
-and "delete" any "Todo" records.
-=========================================================================*/
 const schema = a.schema({
   Trip: a
     .model({
-      tripName: a.string().required(),
-      destination: a.string().required(),
+      id: a.id().required(),
+      tripName: a.string().required(), 
+      destination: a.string().required(), 
       startDate: a.date().required(),
       endDate: a.date().required(),
       tripImageUrl: a.string(),
       tripImageKey: a.string(),
+      Activities: a.hasMany('Activity', 'tripID'), 
     })
-    .authorization((allow) => [allow.owner()]),
+    .authorization((allow) => [allow.owner()]), 
+
+  Activity: a
+    .model({
+      id: a.id().required(),
+      activityName: a.string().required(), 
+      tripID: a.id().required(),
+      trip: a.belongsTo('Trip', 'tripID'), 
+      activityImageUrl: a.string(),
+      activityImageKey: a.string(),
+      activityDate: a.date().required(), 
+      activityTime: a.time(),
+      category: a.ref('ActivityCategory').required(),
+    })
+    .authorization((allow) => [allow.owner()]) 
+    .secondaryIndexes((index) => [
+      index('tripID').sortKeys(['activityName']), 
+  ]),
+
+  ActivityCategory: a.enum(['Flight', 'Lodging', 'Meeting', 'Restaurant']),
+
+  // Profile: a.model({
+  //   id: a.id().required(),
+  //   email: a.string().required(),
+  //   firstName: a.string(),
+  //   lastName: a.string(),
+  //   homeCity: a.string(),
+  //   owner: a.string().required(),
+  // })
+  // .authorization((allow) => [
+  //   allow.owner('userPools'),
+  //   allow.owner().to(['read', 'update', 'create']),
+  // ]) 
 });
+
 
 export type Schema = ClientSchema<typeof schema>;
 
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'userPool',
+    defaultAuthorizationMode: 'userPool', 
   },
 });
-
-/*== STEP 2 ===============================================================
-Go to your frontend source code. From your client-side code, generate a
-Data client to make CRUDL requests to your table. (THIS SNIPPET WILL ONLY
-WORK IN THE FRONTEND CODE FILE.)
-
-Using JavaScript or Next.js React Server Components, Middleware, Server 
-Actions or Pages Router? Review how to generate Data clients for those use
-cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
-=========================================================================*/
-
-/*
-"use client"
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-
-const client = generateClient<Schema>() // use this Data client for CRUDL requests
-*/
-
-/*== STEP 3 ===============================================================
-Fetch records from the database and use them in your frontend component.
-(THIS SNIPPET WILL ONLY WORK IN THE FRONTEND CODE FILE.)
-=========================================================================*/
-
-/* For example, in a React component, you can use this snippet in your
-  function's RETURN statement */
-// const { data: todos } = await client.models.Todo.list()
-
-// return <ul>{todos.map(todo => <li key={todo.id}>{todo.content}</li>)}</ul>
