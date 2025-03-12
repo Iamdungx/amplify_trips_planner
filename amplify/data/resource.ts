@@ -1,4 +1,5 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import { Activity } from 'aws-cdk-lib/aws-stepfunctions';
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try

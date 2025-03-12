@@ -8,6 +8,8 @@ export const storage = defineStorage({
       allow.authenticated.to(['read', 'write', 'delete']),
       // Cho phép người dùng chưa xác thực thực hiện các thao tác: đọc
       allow.guest.to(['read', 'write', 'delete']),
+      // Cho phép người dùng có quyền 'identity' thực hiện các thao tác: đọc, ghi, xóa
+      allow.entity('identity').to(['read', 'write', 'delete'])
     ],
   }),
   isDefault: true,

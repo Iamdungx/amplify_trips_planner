@@ -1,3 +1,4 @@
+import 'package:amplify_trips_planner/common/ui/the_navigation_drawer.dart';
 import 'package:amplify_trips_planner/common/utils/colors.dart' as constants;
 import 'package:amplify_trips_planner/features/trip/controller/trips_list_controller.dart';
 import 'package:amplify_trips_planner/features/trip/ui/trips_gridview/trips_list_gridview.dart';
@@ -31,6 +32,7 @@ class TripsListPage extends ConsumerWidget {
         ),
         backgroundColor: const Color(constants.primaryColorDark),
       ),
+      drawer: const TheNavigationDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showAddTripDialog(context);

@@ -25,15 +25,19 @@ Future<void> main() async {
 }
 
 Future<void> _configureAmplify() async {
-  await Amplify.addPlugins([
-    AmplifyAuthCognito(),
-    // Thêm AmplifyAPI vào danh sách plugin
-    AmplifyAPI(
+  try {
+    final auth = AmplifyAuthCognito();
+    final storage = AmplifyStorageS3();
+    final api = AmplifyAPI(
       options: APIPluginOptions(
         modelProvider: ModelProvider.instance,
       ),
-    ),
-      AmplifyStorageS3(),
-  ]);
-  await Amplify.configure(amplifyConfig);
+    );
+    await Amplify.addPlugins([auth, api, storage]);
+
+    // call Amplify.configure to use the initialized categories in your app
+    await Amplify.configure(amplifyConfig);
+  } on Exception catch (e) {
+    safePrint('An error occurred configuring Amplify: $e');
+  }
 }
