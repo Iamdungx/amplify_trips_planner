@@ -1,4 +1,5 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import { createProfile } from '../function/profile/resource';
 
 const schema = a.schema({
   Trip: a
@@ -31,20 +32,32 @@ const schema = a.schema({
       index('tripID').sortKeys(['activityName']), 
   ]),
 
-  ActivityCategory: a.enum(['Flight', 'Lodging', 'Meeting', 'Restaurant']),
+  Profile: a.model({
+    id: a.id().required(),
+    email: a.string().required(),
+    firstName: a.string(),
+    lastName: a.string(),
+    homeCity: a.string(),
+    owner: a.string().required(),
+  })
+  .authorization((allow) => [
+    allow.authenticated('userPools'),
+    allow.owner().to(['read', 'update', 'create']),
+  ]),
 
-  // Profile: a.model({
-  //   id: a.id().required(),
-  //   email: a.string().required(),
-  //   firstName: a.string(),
-  //   lastName: a.string(),
-  //   homeCity: a.string(),
-  //   owner: a.string().required(),
-  // })
-  // .authorization((allow) => [
-  //   allow.owner('userPools'),
-  //   allow.owner().to(['read', 'update', 'create']),
-  // ]) 
+  createProfile: a
+    .query()
+    .arguments({
+      name: a.string().required(),
+      owner: a.string().required(),
+    })
+    .returns(a.string())
+    .handler(a.handler.function(createProfile))
+    .authorization((allow) => [
+      allow.authenticated('userPools'),
+    ]),
+
+  ActivityCategory: a.enum(['Flight', 'Lodging', 'Meeting', 'Restaurant']),
 });
 
 
